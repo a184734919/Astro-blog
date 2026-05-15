@@ -1,7 +1,7 @@
 ---
 title: JavaScript 高阶函数应用
 description: 深入理解高阶函数的原理、应用场景和最佳实践，掌握函数式编程核心概念
-pubDate: 2024-01-03
+published: 2024-01-03
 tags: ["函数式编程","高阶函数"]
 category: 'JavaScript'
 draft: false

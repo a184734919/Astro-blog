@@ -1,7 +1,7 @@
 ---
 title: JavaScript 运算符全解析
 description: 深入理解 JavaScript 中的算术、比较、逻辑、赋值与位运算符，掌握运算符优先级和最佳实践
-pubDate: 2024-01-05
+published: 2024-01-05
 tags: ["JS基础","运算符"]
 category: 'JavaScript'
 draft: false

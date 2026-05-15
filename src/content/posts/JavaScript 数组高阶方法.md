@@ -1,7 +1,7 @@
 ---
 title: JavaScript 数组高阶方法
 description: 深入理解 map、filter、reduce 等高阶函数的原理、应用和最佳实践
-pubDate: 2024-01-02
+published: 2024-01-02
 tags: ["JS基础","数组","高阶函数"]
 category: 'JavaScript'
 draft: false

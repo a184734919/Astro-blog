@@ -1,7 +1,7 @@
 ---
 title: JavaScript 流程控制语句
 description: 深入解析 JavaScript 流程控制语句，包括条件判断、循环语句、异常处理等
-pubDate: 2024-01-04
+published: 2024-01-04
 tags: ["JS基础","流程控制"]
 category: 'JavaScript'
 draft: false

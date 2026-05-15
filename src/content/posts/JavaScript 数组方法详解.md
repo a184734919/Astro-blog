@@ -1,7 +1,7 @@
 ---
 title: JavaScript 数组方法详解
 description: 深入解析 JavaScript 数组方法，包括基础方法、查找方法、转换方法等，提供实际应用场景和最佳实践
-pubDate: 2024-01-01
+published: 2024-01-01
 tags: ["JS基础","数组"]
 category: 'JavaScript'
 draft: false
