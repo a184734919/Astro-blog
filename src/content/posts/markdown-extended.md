@@ -9,87 +9,33 @@ category: 'Examples'
 draft: true 
 ---
 
-## GitHub Repository Cards
-You can add dynamic cards that link to GitHub repositories, on page load, the repository information is pulled from the GitHub API. 
+## 概述
 
-::github{repo="Fabrizz/MMM-OnSpotify"}
+Markdown Extended Features是前端开发中的重要内容，本文将详细介绍相关知识点。
 
-Create a GitHub repository card with the code `::github{repo="<owner>/<repo>"}`.
+## 核心概念
 
-```markdown
-::github{repo="saicaca/fuwari"}
+理解核心概念是掌握任何技术的基础。
+
+## 基本用法
+
+```javascript
+// 示例代码
+function example() {
+  console.log('Hello World');
+}
 ```
 
-## Admonitions
+## 实际应用
 
-Following types of admonitions are supported: `note` `tip` `important` `warning` `caution`
+在实际项目中，我们需要根据具体场景灵活运用。
 
-:::note
-Highlights information that users should take into account, even when skimming.
-:::
+## 注意事项
 
-:::tip
-Optional information to help a user be more successful.
-:::
+1. 注意边界情况
+2. 考虑性能影响
+3. 遵循最佳实践
 
-:::important
-Crucial information necessary for users to succeed.
-:::
+## 总结
 
-:::warning
-Critical content demanding immediate user attention due to potential risks.
-:::
-
-:::caution
-Negative potential consequences of an action.
-:::
-
-### Basic Syntax
-
-```markdown
-:::note
-Highlights information that users should take into account, even when skimming.
-:::
-
-:::tip
-Optional information to help a user be more successful.
-:::
-```
-
-### Custom Titles
-
-The title of the admonition can be customized.
-
-:::note[MY CUSTOM TITLE]
-This is a note with a custom title.
-:::
-
-```markdown
-:::note[MY CUSTOM TITLE]
-This is a note with a custom title.
-:::
-```
-
-### GitHub Syntax
-
-> [!TIP]
-> [The GitHub syntax](https://github.com/orgs/community/discussions/16925) is also supported.
-
-```
-> [!NOTE]
-> The GitHub syntax is also supported.
-
-> [!TIP]
-> The GitHub syntax is also supported.
-```
-
-### Spoiler
-
-You can add spoilers to your text. The text also supports **Markdown** syntax.
-
-The content :spoiler[is hidden **ayyy**]!
-
-```markdown
-The content :spoiler[is hidden **ayyy**]!
-
-```
+通过本文的学习，相信你已经对Markdown Extended Features有了更深入的理解。

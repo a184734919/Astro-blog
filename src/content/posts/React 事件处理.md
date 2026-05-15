@@ -1,17 +1,17 @@
 ---
-title: 第一次发md
-published: 2022-10-13
-description: '我的第一篇博客文章，记录开始写博客的心路历程'
+title: React 事件处理
+published: 2023-07-15
+description: '事件绑定和处理的详细介绍和学习笔记'
 image: ''
-tags: ['记录']
-category: '博客说明'
+tags: ["React","事件"]
+category: 'React'
 draft: false
 lang: 'zh-CN'
 ---
 
 ## 概述
 
-第一次发md是前端开发中的重要内容，本文将详细介绍相关知识点。
+React 事件处理是前端开发中的重要内容，本文将详细介绍相关知识点。
 
 ## 核心概念
 
@@ -38,4 +38,4 @@ function example() {
 
 ## 总结
 
-通过本文的学习，相信你已经对第一次发md有了更深入的理解。
+通过本文的学习，相信你已经对React 事件处理有了更深入的理解。
