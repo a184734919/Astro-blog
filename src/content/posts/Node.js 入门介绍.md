@@ -118,6 +118,353 @@ undefined
 - LinkedIn（社交网络）
 - Uber（出行服务）
 
+### 创建完整的 Web 应用
+
+```javascript
+const http = require('http');
+const fs = require('fs');
+const path = require('path');
+
+// MIME 类型映射
+const mimeTypes = {
+  '.html': 'text/html',
+  '.js': 'text/javascript',
+  '.css': 'text/css',
+  '.json': 'application/json',
+  '.png': 'image/png',
+  '.jpg': 'image/jpg',
+  '.gif': 'image/gif',
+  '.svg': 'image/svg+xml',
+  '.ico': 'image/x-icon'
+};
+
+const server = http.createServer((req, res) => {
+  console.log(`${req.method} ${req.url}`);
+
+  // 处理 API 请求
+  if (req.url.startsWith('/api/')) {
+    handleAPI(req, res);
+    return;
+  }
+
+  // 处理静态文件
+  let filePath = '.' + req.url;
+  if (filePath === './') {
+    filePath = './index.html';
+  }
+
+  const extname = path.extname(filePath);
+  const contentType = mimeTypes[extname] || 'application/octet-stream';
+
+  fs.readFile(filePath, (err, content) => {
+    if (err) {
+      if (err.code === 'ENOENT') {
+        fs.readFile('./404.html', (err, content) => {
+          res.writeHead(404, { 'Content-Type': 'text/html' });
+          res.end(content, 'utf8');
+        });
+      } else {
+        res.writeHead(500);
+        res.end(`Server Error: ${err.code}`);
+      }
+    } else {
+      res.writeHead(200, { 'Content-Type': contentType });
+      res.end(content, 'utf8');
+    }
+  });
+});
+
+function handleAPI(req, res) {
+  // 设置 CORS 头
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  if (req.method === 'OPTIONS') {
+    res.writeHead(200);
+    res.end();
+    return;
+  }
+
+  // 路由处理
+  const url = new URL(req.url, `http://${req.headers.host}`);
+  const pathname = url.pathname;
+
+  if (pathname === '/api/users' && req.method === 'GET') {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify([
+      { id: 1, name: 'Alice' },
+      { id: 2, name: 'Bob' }
+    ]));
+  } else if (pathname === '/api/users' && req.method === 'POST') {
+    let body = '';
+    req.on('data', chunk => body += chunk);
+    req.on('end', () => {
+      const user = JSON.parse(body);
+      res.writeHead(201, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ ...user, id: 3 }));
+    });
+  } else {
+    res.writeHead(404, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ error: 'Not Found' }));
+  }
+}
+
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => {
+  console.log(`Server running at http://localhost:${PORT}/`);
+});
+```
+
+### 命令行工具开发
+
+```javascript
+#!/usr/bin/env node
+
+const fs = require('fs');
+const path = require('path');
+const readline = require('readline');
+
+// 创建命令行界面
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
+
+// 命令参数解析
+const args = process.argv.slice(2);
+const command = args[0];
+
+switch (command) {
+  case 'init':
+    initProject();
+    break;
+  case 'create':
+    createComponent(args[1]);
+    break;
+  case 'serve':
+    startServer(args[1]);
+    break;
+  default:
+    showHelp();
+}
+
+function initProject() {
+  console.log('初始化项目...');
+
+  const projectStructure = {
+    'src': {
+      'components': {},
+      'styles': {},
+      'utils': {}
+    },
+    'public': {
+      'index.html': '<!DOCTYPE html>\n<html>\n<head>\n  <title>My App</title>\n</head>\n<body>\n  <div id="app"></div>\n</body>\n</html>'
+    },
+    'package.json': JSON.stringify({
+      name: 'my-app',
+      version: '1.0.0',
+      scripts: {
+        start: 'node server.js',
+        dev: 'nodemon server.js'
+      }
+    }, null, 2),
+    'server.js': `const http = require('http');
+const fs = require('fs');
+const path = require('path');
+
+const server = http.createServer((req, res) => {
+  let filePath = path.join(__dirname, 'public', req.url === '/' ? 'index.html' : req.url);
+
+  fs.readFile(filePath, (err, content) => {
+    if (err) {
+      res.writeHead(404);
+      res.end('File not found');
+    } else {
+      res.writeHead(200);
+      res.end(content);
+    }
+  });
+});
+
+server.listen(3000, () => console.log('Server running on port 3000'));
+`
+  };
+
+  function createStructure(base, structure) {
+    Object.keys(structure).forEach(key => {
+      const item = structure[key];
+      const itemPath = path.join(base, key);
+
+      if (typeof item === 'object' && !Buffer.isBuffer(item)) {
+        fs.mkdirSync(itemPath, { recursive: true });
+        createStructure(itemPath, item);
+      } else {
+        fs.writeFileSync(itemPath, item);
+      }
+    });
+  }
+
+  createStructure('.', projectStructure);
+  console.log('项目初始化完成！');
+}
+
+function createComponent(name) {
+  if (!name) {
+    console.error('请提供组件名称');
+    process.exit(1);
+  }
+
+  const componentPath = `src/components/${name}.js`;
+  const componentContent = `class ${name} {
+  constructor() {
+    this.element = document.createElement('div');
+    this.element.className = '${name.toLowerCase()}';
+  }
+
+  render() {
+    this.element.innerHTML = \`
+      <h1>${name} Component</h1>
+    \`;
+    return this.element;
+  }
+}
+
+export default ${name};
+`;
+
+  fs.writeFileSync(componentPath, componentContent);
+  console.log(`组件 ${name} 已创建: ${componentPath}`);
+}
+
+function startServer(port = 3000) {
+  console.log(`启动开发服务器，端口: ${port}`);
+  // 这里可以集成开发服务器逻辑
+}
+
+function showHelp() {
+  console.log(`
+使用方法:
+  node app.js init          - 初始化项目
+  node app.js create <name> - 创建组件
+  node app.js serve [port]  - 启动服务器
+  `);
+}
+```
+
+### 文件处理工具
+
+```javascript
+const fs = require('fs').promises;
+const path = require('path');
+
+class FileProcessor {
+  constructor(inputDir, outputDir) {
+    this.inputDir = inputDir;
+    this.outputDir = outputDir;
+  }
+
+  async processAll() {
+    try {
+      await fs.mkdir(this.outputDir, { recursive: true });
+      const files = await fs.readdir(this.inputDir);
+
+      for (const file of files) {
+        const inputPath = path.join(this.inputDir, file);
+        const outputPath = path.join(this.outputDir, file);
+
+        const stats = await fs.stat(inputPath);
+
+        if (stats.isFile() && file.endsWith('.txt')) {
+          await this.processFile(inputPath, outputPath);
+        }
+      }
+
+      console.log('所有文件处理完成');
+    } catch (error) {
+      console.error('处理失败:', error);
+    }
+  }
+
+  async processFile(inputPath, outputPath) {
+    try {
+      const content = await fs.readFile(inputPath, 'utf8');
+      const processed = this.transformContent(content);
+      await fs.writeFile(outputPath, processed);
+      console.log(`已处理: ${path.basename(inputPath)}`);
+    } catch (error) {
+      console.error(`处理文件失败 ${inputPath}:`, error);
+    }
+  }
+
+  transformContent(content) {
+    // 示例：转换大写
+    return content.toUpperCase();
+  }
+}
+
+// 使用示例
+const processor = new FileProcessor('./input', './output');
+processor.processAll();
+```
+
+### 数据处理管道
+
+```javascript
+const { Transform, pipeline } = require('stream');
+const fs = require('fs');
+
+// 创建转换流
+class DataTransform extends Transform {
+  constructor(options) {
+    super(options);
+    this.count = 0;
+  }
+
+  _transform(chunk, encoding, callback) {
+    try {
+      const data = JSON.parse(chunk.toString());
+      this.count++;
+
+      // 数据转换
+      const transformed = {
+        id: this.count,
+        timestamp: new Date().toISOString(),
+        data: data
+      };
+
+      this.push(JSON.stringify(transformed) + '\n');
+      callback();
+    } catch (error) {
+      callback(error);
+    }
+  }
+
+  _flush(callback) {
+    console.log(`总共处理了 ${this.count} 条记录`);
+    callback();
+  }
+}
+
+// 使用管道处理数据
+const readStream = fs.createReadStream('input.jsonl');
+const writeStream = fs.createWriteStream('output.jsonl');
+const transform = new DataTransform();
+
+pipeline(
+  readStream,
+  transform,
+  writeStream,
+  (err) => {
+    if (err) {
+      console.error('管道处理失败:', err);
+    } else {
+      console.log('数据处理完成');
+    }
+  }
+);
+```
+
 ## 注意事项
 
 1. 注意边界情况
